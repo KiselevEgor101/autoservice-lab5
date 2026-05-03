@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Автомастерская</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+    <h1>Автомастерская</h1>
+</header>
+
+<nav>
+    <a href="#">Клиенты</a>
+    <a href="#">Автомобили</a>
+    <a href="#">Услуги</a>
+    <a href="#">Мастера</a>
+</nav>
+
+<section class="appointment">
+    <h2>Запись на обслуживание</h2>
+    <form id="appointmentForm">
+        <input type="text" id="clientName" placeholder="Имя клиента" required>
+        <input type="text" id="clientPhone" placeholder="Телефон" required>
+        <input type="text" id="carModel" placeholder="Автомобиль" required>
+        <select id="assignedMaster" required>
+            <option value="">Выберите мастера</option>
+            <option value="Иван">Иван — двигатель</option>
+            <option value="Пётр">Пётр — электрика</option>
+            <option value="Алексей">Алексей — диагностика</option>
+            <option value="Сергей">Сергей — кузов</option>
+            <option value="Дмитрий">Дмитрий — универсал</option>
+        </select>
+        <button type="submit">Записаться</button>
+    </form>
+
+    <div id="filterSection">
+        <label for="masterFilter">Фильтр по мастеру:</label>
+        <select id="masterFilter">
+            <option value="all">Все</option>
+            <option value="Иван">Иван</option>
+            <option value="Пётр">Пётр</option>
+            <option value="Алексей">Алексей</option>
+            <option value="Сергей">Сергей</option>
+            <option value="Дмитрий">Дмитрий</option>
+        </select>
+    </div>
+
+    <div id="appointmentsList">
+        <h3>Список записей: <span id="appointmentsCount">0</span> | Выполнено: <span id="completedCount">0</span></h3>
+        <ul id="appointments"></ul>
+    </div>
+</section>
+
+<section class="masters">
+    <h2>Наши мастера</h2>
+    <ul>
+        <li>Иван — двигатель</li>
+        <li>Пётр — электрика</li>
+        <li>Алексей — диагностика</li>
+        <li>Сергей — кузов</li>
+        <li>Дмитрий — универсал</li>
+    </ul>
+</section>
+
+<section class="services">
+    <h2>Услуги</h2>
+    <ul>
+        <li>Диагностика автомобиля</li>
+        <li>Ремонт двигателя</li>
+        <li>Ремонт электрооборудования</li>
+        <li>Кузовной ремонт</li>
+    </ul>
+</section>
+
+<footer>
+    <p>Скидки для постоянных клиентов</p>
+</footer>
+
+<script>
+const form = document.getElementById('appointmentForm');
+const appointmentsUl = document.getElementById('appointments');
+const appointmentsCount = document.getElementById('appointmentsCount');
+const completedCount = document.getElementById('completedCount');
+const masterFilter = document.getElementById('masterFilter');
+
+let appointments = JSON.parse(localStorage.getItem('appointments')) || [];
+let completed = appointments.filter(a => a.completed).length;
+
+function saveAppointments() {
+    localStorage.setItem('appointments', JSON.stringify(appointments));
+}
+
+function renderAppointments() {
+    appointmentsUl.innerHTML = '';
+    appointments.forEach((a, index) => {
+        const li = document.createElement('li');
+        li.dataset.master = a.master;
+        li.className = a.completed ? 'completed' : '';
+        li.innerHTML = `<strong>${a.name}</strong> — ${a.phone} — ${a.car} — <em>${a.master}</em>
+                        <button class="completeBtn">✔</button>
+                        <button class="deleteBtn">✖</button>`;
+        appointmentsUl.appendChild(li);
+    });
+    updateCounters();
+}
+
+function updateCounters() {
+    appointmentsCount.textContent = appointments.length;
+    completedCount.textContent = appointments.filter(a => a.completed).length;
+}
+
+// Добавление новой записи
+form.addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const name = document.getElementById('clientName').value.trim();
+    const phone = document.getElementById('clientPhone').value.trim();
+    const car = document.getElementById('carModel').value.trim();
+    const master = document.getElementById('assignedMaster').value;
+
+    if (!name || !phone || !car || !master) {
+        alert("Пожалуйста, заполните все поля!");
+        return;
+    }
+
+    appointments.push({ name, phone, car, master, completed: false });
+    saveAppointments();
+    renderAppointments();
+    form.reset();
+});
+
+// Действия с кнопками
+appointmentsUl.addEventListener('click', function(e) {
+    const index = Array.from(appointmentsUl.children).indexOf(e.target.parentElement);
+    if (e.target.classList.contains('completeBtn')) {
+        appointments[index].completed = true;
+        saveAppointments();
+        renderAppointments();
+    } else if (e.target.classList.contains('deleteBtn')) {
+        appointments.splice(index, 1);
+        saveAppointments();
+        renderAppointments();
+    }
+});
+
+// Фильтр по мастеру
+masterFilter.addEventListener('change', function() {
+    const value = masterFilter.value;
+    Array.from(appointmentsUl.children).forEach((li, index) => {
+        if (value === 'all' || appointments[index].master === value) {
+            li.style.display = '';
+        } else {
+            li.style.display = 'none';
+        }
+    });
+});
+
+// Рендер при загрузке
+renderAppointments();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,94 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #e0e0e0;
+}
+
+header {
+    background: #222;
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+}
+
+nav {
+    background: #333;
+    padding: 12px;
+    text-align: center;
+}
+
+nav a {
+    color: white;
+    margin: 0 15px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+nav a:hover {
+    color: #ffcc00;
+}
+
+section {
+    background: #fff;
+    margin: 20px auto;
+    padding: 25px;
+    max-width: 650px;
+    border-radius: 12px;
+    box-shadow: 0 8px 12px rgba(0,0,0,0.15);
+    transition: transform 0.3s;
+}
+
+section:hover {
+    transform: translateY(-2px);
+}
+
+form input, form select {
+    display: block;
+    width: 96%;
+    margin: 10px 0;
+    padding: 12px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 15px;
+}
+
+form button {
+    padding: 12px 25px;
+    background: linear-gradient(to right, #4caf50, #81c784);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+form button:hover {
+    background: linear-gradient(to right, #388e3c, #66bb6a);
+}
+
+#appointmentsList {
+    margin-top: 20px;
+}
+
+#appointments li {
+    padding: 10px 12px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    background: #f0f0f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: 0.3s;
+}
+
+#appointments li:hover {
+    background: #dcedc8;
+}
+
+#appointments li.completed {
+    background: #c8e6c9;
+    color: #555
